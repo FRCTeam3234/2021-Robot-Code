@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         state.clearColor();
         macro = new AutonomousBuilder()
-            .add(state.new MotionAuto()::testSequence)
+            .add(state.new RecordedAuto()::driveSequence)
             .build();
     }
 

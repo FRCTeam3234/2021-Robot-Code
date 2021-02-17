@@ -501,4 +501,36 @@ class RobotState {
                     && right_motion.getDone(right_position, current_time), true);
         }
     }
+
+    public class RecordedAuto {
+        DataReader reader = new DataReader();
+        public SequenceList driveSequence() {
+            return new SequenceList(this::init,this::drive);
+        }
+
+        public AutonomousResult init() {
+            //open recording file
+            reader.StartReading();
+            return AutonomousResult.PASS;
+        }
+
+        public AutonomousResult drive() {
+            StickData data = reader.ReadData();
+            if (data.hasData) {
+                //double forward_power = buttonSlow.get() ? 0.5 : 1.0;
+                //double turn_power = buttonLine.get() ? 0 : (buttonSlow.get() ? 0.6 : 1.0);
+                double forward_power = 1.0;
+                double turn_power = 1.0;
+                robotDrive.arcadeDrive(-data.yVal*forward_power,-(data.xVal)*turn_power);
+                return AutonomousResult.CONTINUE_CANCELABLE;
+            }
+            else
+            {
+                reader.StopReading();
+                return AutonomousResult.END;
+            }
+            
+        }
+    }
+
 }
